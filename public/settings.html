@@ -3,98 +3,65 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Chat — Codex</title>
+  <title>Settings — Codex</title>
 
   <style>
     * { box-sizing: border-box; }
 
     body {
       margin: 0;
-      height: 100vh;
-      overflow: hidden;
       background: #080808;
-      color: #eee;
+      color: white;
       font-family: Inter, Arial, sans-serif;
     }
 
-    .app {
-      height: 100vh;
-      display: flex;
+    nav {
+      padding: 20px 30px;
+      border-bottom: 1px solid #222;
     }
 
-    aside {
-      width: 240px;
-      padding: 20px;
-      background: #0c0c0c;
-      border-right: 1px solid #1f1f1f;
-    }
-
-    .logo {
-      font-weight: 900;
-      font-size: 20px;
-      margin-bottom: 30px;
-    }
-
-    aside a, aside button {
-      display: block;
-      width: 100%;
+    nav a {
       color: #aaa;
       text-decoration: none;
-      background: none;
-      border: 0;
-      text-align: left;
-      padding: 11px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 14px;
-    }
-
-    aside a:hover, aside button:hover {
-      background: #171717;
-      color: #fff;
+      margin-right: 20px;
     }
 
     main {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      min-width: 0;
+      max-width: 760px;
+      margin: 60px auto;
+      padding: 0 20px;
     }
 
-    header {
-      height: 60px;
-      border-bottom: 1px solid #1d1d1d;
-      display: flex;
-      align-items: center;
-      padding: 0 25px;
-      color: #aaa;
-      font-size: 14px;
+    .profile {
+      overflow: hidden;
+      border: 1px solid #242424;
+      background: #101010;
+      border-radius: 18px;
     }
 
-    #messages {
-      flex: 1;
-      overflow-y: auto;
-      padding: 35px 20px 150px;
+    .banner {
+      height: 190px;
+      background:
+        linear-gradient(135deg, #222, #444);
+      background-position: center;
+      background-size: cover;
     }
 
-    .message {
-      max-width: 780px;
-      margin: 0 auto 28px;
-      display: flex;
-      gap: 14px;
-      line-height: 1.7;
+    .info {
+      padding: 0 30px 30px;
     }
 
     .avatar {
-      width: 32px;
-      height: 32px;
-      flex: 0 0 32px;
-      border: 1px solid #333;
-      border-radius: 9px;
+      width: 100px;
+      height: 100px;
+      margin-top: -50px;
+      background: #181818;
+      border: 5px solid #101010;
+      border-radius: 50%;
+      overflow: hidden;
       display: grid;
       place-items: center;
-      font-size: 12px;
-      overflow: hidden;
+      font-size: 30px;
     }
 
     .avatar img {
@@ -103,265 +70,153 @@
       object-fit: cover;
     }
 
-    .content {
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
+    label {
+      color: #aaa;
+      display: block;
+      margin: 24px 0 8px;
+      font-size: 14px;
     }
 
-    .role {
-      font-size: 13px;
-      font-weight: bold;
-      margin-bottom: 5px;
-      color: #fff;
-    }
-
-    .composer-wrap {
-      position: fixed;
-      bottom: 0;
-      left: 240px;
-      right: 0;
-      padding: 20px;
-      background: linear-gradient(transparent, #080808 30%);
-    }
-
-    .composer {
-      max-width: 780px;
-      margin: auto;
-      border: 1px solid #303030;
-      border-radius: 16px;
-      background: #111;
-      display: flex;
-      align-items: end;
-      padding: 10px;
-    }
-
-    textarea {
-      flex: 1;
-      resize: none;
-      border: 0;
-      outline: none;
-      background: transparent;
-      color: #fff;
-      font: inherit;
-      padding: 10px;
-      max-height: 160px;
-    }
-
-    .send {
-      width: 40px;
-      height: 40px;
-      border: 0;
+    input {
+      width: 100%;
+      background: #090909;
+      border: 1px solid #292929;
+      color: white;
       border-radius: 10px;
-      font-size: 18px;
+      padding: 13px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 9px;
+      background: white;
+      font-weight: bold;
+      padding: 12px 20px;
+      margin-top: 25px;
       cursor: pointer;
     }
 
-    .empty {
-      text-align: center;
+    .hint {
       color: #777;
-      margin-top: 20vh;
-    }
-
-    @media(max-width: 700px) {
-      aside { display: none; }
-      .composer-wrap { left: 0; }
+      font-size: 13px;
+      line-height: 1.5;
     }
   </style>
 </head>
 
 <body>
 
-<div class="app">
-  <aside>
-    <div class="logo">Codex</div>
+<nav>
+  <a href="/dashboard">← Dashboard</a>
+  <a href="/chat">Chat</a>
+</nav>
 
-    <button onclick="newChat()">＋ New chat</button>
-    <a href="/dashboard">Dashboard</a>
-    <a href="/settings">Settings</a>
-  </aside>
+<main>
+  <h1>Profile settings</h1>
+  <p style="color:#888">
+    Customize your Codex profile.
+  </p>
 
-  <main>
-    <header>
-      Nemotron 3 Ultra · OpenRouter
-    </header>
+  <div class="profile">
+    <div class="banner" id="banner"></div>
 
-    <div id="messages"></div>
+    <div class="info">
+      <div class="avatar" id="avatar">C</div>
 
-    <div class="composer-wrap">
-      <div class="composer">
-        <textarea
-          id="input"
-          rows="1"
-          placeholder="Message Codex..."
-        ></textarea>
+      <label>Display name</label>
+      <input id="name" type="text" maxlength="40">
 
-        <button class="send" id="send">↑</button>
-      </div>
+      <label>Profile photo</label>
+      <input id="photo" type="file" accept="image/*">
+
+      <label>Banner</label>
+      <input id="bannerFile" type="file" accept="image/*">
+
+      <p class="hint">
+        Gunakan gambar kecil. LocalStorage browser memiliki batas
+        penyimpanan dan bukan tempat ideal untuk file berukuran besar.
+      </p>
+
+      <button onclick="saveProfile()">Save changes</button>
     </div>
-  </main>
-</div>
+  </div>
+</main>
 
 <script>
-  const user = JSON.parse(localStorage.getItem("codex_user") || "null");
+  let user = JSON.parse(localStorage.getItem("codex_user") || "null");
 
   if (!user) {
     location.href = "/auth";
   }
 
-  let messages = JSON.parse(
-    localStorage.getItem("codex_messages") || "[]"
-  );
+  const nameInput = document.getElementById("name");
+  const avatar = document.getElementById("avatar");
+  const banner = document.getElementById("banner");
 
-  let loading = false;
+  nameInput.value = user.name || "";
 
-  const messageBox = document.getElementById("messages");
-  const input = document.getElementById("input");
-  const sendButton = document.getElementById("send");
+  function updatePreview() {
+    if (user.photo) {
+      avatar.innerHTML = `<img src="${user.photo}" alt="Profile">`;
+    } else {
+      avatar.textContent = (user.name || "C")[0].toUpperCase();
+    }
 
-  function escapeHTML(value) {
-    const div = document.createElement("div");
-    div.textContent = value;
-    return div.innerHTML;
+    if (user.banner) {
+      banner.style.backgroundImage = `url("${user.banner}")`;
+    }
   }
 
-  function render() {
-    if (!messages.length) {
-      messageBox.innerHTML = `
-        <div class="empty">
-          <h2>What can I help with?</h2>
-          <p>Ask Codex anything.</p>
-        </div>
-      `;
+  function readFile(file, callback) {
+    if (!file) return;
+
+    if (file.size > 1.5 * 1024 * 1024) {
+      alert("Gunakan gambar di bawah 1.5 MB.");
       return;
     }
 
-    messageBox.innerHTML = messages.map((message) => {
-      const isUser = message.role === "user";
+    const reader = new FileReader();
 
-      let avatar = isUser ? "You" : "✦";
-
-      if (isUser && user?.photo) {
-        avatar = `<img src="${escapeHTML(user.photo)}" alt="">`;
-      }
-
-      return `
-        <div class="message">
-          <div class="avatar">${avatar}</div>
-
-          <div>
-            <div class="role">
-              ${isUser ? escapeHTML(user?.name || "You") : "Codex"}
-            </div>
-
-            <div class="content">${escapeHTML(message.content)}</div>
-          </div>
-        </div>
-      `;
-    }).join("");
-
-    messageBox.scrollTop = messageBox.scrollHeight;
+    reader.onload = () => callback(reader.result);
+    reader.readAsDataURL(file);
   }
 
-  async function sendMessage() {
-    const text = input.value.trim();
-
-    if (!text || loading) return;
-
-    messages.push({
-      role: "user",
-      content: text
+  document.getElementById("photo").addEventListener("change", (e) => {
+    readFile(e.target.files[0], (result) => {
+      user.photo = result;
+      updatePreview();
     });
+  });
 
-    input.value = "";
-    save();
-    render();
+  document.getElementById("bannerFile").addEventListener("change", (e) => {
+    readFile(e.target.files[0], (result) => {
+      user.banner = result;
+      updatePreview();
+    });
+  });
 
-    loading = true;
-    sendButton.disabled = true;
+  function saveProfile() {
+    const name = nameInput.value.trim();
 
-    const loadingMessage = {
-      role: "assistant",
-      content: "Thinking..."
-    };
+    if (!name) {
+      alert("Nama tidak boleh kosong.");
+      return;
+    }
 
-    messages.push(loadingMessage);
-    render();
+    user.name = name;
 
     try {
-      // Jangan kirim placeholder "Thinking..." ke API.
-      const apiMessages = messages.slice(0, -1);
-
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          messages: apiMessages
-        })
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Request failed");
-      }
-
-      loadingMessage.content = data.content;
-      save();
-      render();
-    } catch (error) {
-      loadingMessage.content =
-        "Error: " + error.message;
-
-      save();
-      render();
-    } finally {
-      loading = false;
-      sendButton.disabled = false;
-      input.focus();
+      localStorage.setItem("codex_user", JSON.stringify(user));
+      alert("Profile saved.");
+      updatePreview();
+    } catch {
+      alert(
+        "Gagal menyimpan. Kemungkinan gambar terlalu besar untuk LocalStorage."
+      );
     }
   }
 
-  function save() {
-    localStorage.setItem(
-      "codex_messages",
-      JSON.stringify(messages)
-    );
-  }
-
-  function newChat() {
-    if (
-      messages.length &&
-      !confirm("Hapus percakapan saat ini?")
-    ) {
-      return;
-    }
-
-    messages = [];
-    localStorage.removeItem("codex_messages");
-    render();
-  }
-
-  sendButton.addEventListener("click", sendMessage);
-
-  input.addEventListener("keydown", (event) => {
-    if (
-      event.key === "Enter" &&
-      !event.shiftKey
-    ) {
-      event.preventDefault();
-      sendMessage();
-    }
-  });
-
-  input.addEventListener("input", () => {
-    input.style.height = "auto";
-    input.style.height =
-      Math.min(input.scrollHeight, 160) + "px";
-  });
-
-  render();
+  updatePreview();
 </script>
 
 </body>
