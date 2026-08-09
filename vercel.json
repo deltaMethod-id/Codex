@@ -1,29 +1,39 @@
 {
-  "version": 2,
-  "rewrites": [
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "builds": [
     {
-      "source": "/",
-      "destination": "/index.html"
+      "src": "server.js",
+      "use": "@vercel/node"
     },
     {
-      "source": "/auth",
-      "destination": "/auth.html"
+      "src": "public/**",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/chat",
+      "dest": "/server.js"
     },
     {
-      "source": "/dashboard",
-      "destination": "/dashboard.html"
+      "src": "/auth",
+      "dest": "/public/auth.html"
     },
     {
-      "source": "/chat",
-      "destination": "/chat.html"
+      "src": "/dashboard",
+      "dest": "/public/dashboard.html"
     },
     {
-      "source": "/settings",
-      "destination": "/settings.html"
+      "src": "/chat",
+      "dest": "/public/chat.html"
     },
     {
-      "source": "/api/chat",
-      "destination": "/server.js"
+      "src": "/settings",
+      "dest": "/public/settings.html"
+    },
+    {
+      "src": "/",
+      "dest": "/public/index.html"
     }
   ]
 }
