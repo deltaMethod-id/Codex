@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — Codex</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: #080808;
+      color: #fff;
+      font-family: Inter, Arial, sans-serif;
+    }
+
+    nav {
+      height: 65px;
+      border-bottom: 1px solid #222;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 30px;
+    }
+
+    nav a {
+      color: #aaa;
+      text-decoration: none;
+      margin-left: 20px;
+    }
+
+    main {
+      max-width: 950px;
+      margin: auto;
+      padding: 70px 25px;
+    }
+
+    h1 {
+      font-size: 45px;
+      margin-bottom: 10px;
+    }
+
+    .sub { color: #888; }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-top: 40px;
+    }
+
+    .card {
+      display: block;
+      min-height: 160px;
+      background: #101010;
+      border: 1px solid #242424;
+      border-radius: 16px;
+      padding: 25px;
+      text-decoration: none;
+      color: white;
+      transition: .2s;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      border-color: #555;
+    }
+
+    .card p {
+      color: #888;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+
+<body>
+
+<nav>
+  <strong>Codex</strong>
+
+  <div>
+    <a href="/chat">Chat</a>
+    <a href="/settings">Settings</a>
+    <a href="#" onclick="logout()">Logout</a>
+  </div>
+</nav>
+
+<main>
+  <div class="sub">DASHBOARD</div>
+  <h1 id="welcome">Welcome.</h1>
+
+  <p class="sub">
+    What would you like to create today?
+  </p>
+
+  <div class="cards">
+    <a class="card" href="/chat">
+      <h3>✦ New Chat</h3>
+      <p>Mulai percakapan baru dengan Nemotron.</p>
+    </a>
+
+    <a class="card" href="/settings">
+      <h3>⚙ Profile</h3>
+      <p>Ubah nama, profile picture, dan banner Codex kamu.</p>
+    </a>
+  </div>
+</main>
+
+<script>
+  const user = JSON.parse(localStorage.getItem("codex_user") || "null");
+
+  if (!user) {
+    location.href = "/auth.html";
+  } else {
+    document.getElementById("welcome").textContent =
+      `Welcome, ${user.name}.`;
+  }
+
+  function logout() {
+    localStorage.removeItem("codex_user");
+    location.href = "/auth";
+  }
+</script>
+
+</body>
+</html>
