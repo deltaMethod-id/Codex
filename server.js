@@ -2,66 +2,48 @@ const MODEL =
   process.env.OPENROUTER_MODEL ||
   "nvidia/nemotron-3-ultra:free";
 
-export default async function handler(req) {
+export default async function handler(req, res) {
   if (req.method !== "POST") {
-    return new Response(
-      JSON.stringify({
-        error: "Method Not Allowed"
-      }),
-      {
-        status: 405,
-        headers: {
-          "Content-Type": "application/json"
-        }
-      }
-    );
+    return res.status(405).json({
+      error: "Method Not Allowed"
+    });
+  }
+
+  const API_KEY =
+    process.env.OPENROUTER_API_KEY;
+
+  if (!API_KEY) {
+    return res.status(500).json({
+      error:
+        "OPENROUTER_API_KEY belum dikonfigurasi."
+    });
   }
 
   try {
-    const API_KEY = process.env.OPENROUTER_API_KEY;
+    const { messages } = req.body || {};
 
-    if (!API_KEY) {
-      return new Response(
-        JSON.stringify({
-          error: "OPENROUTER_API_KEY belum dikonfigurasi."
-        }),
-        {
-          status: 500,
-          headers: {
-            "Content-Type": "application/json"
-          }
-        }
-      );
-    }
-
-    const body = await req.json();
-    const messages = body?.messages;
-
-    if (!Array.isArray(messages) || messages.length === 0) {
-      return new Response(
-        JSON.stringify({
-          error: "Messages tidak valid."
-        }),
-        {
-          status: 400,
-          headers: {
-            "Content-Type": "application/json"
-          }
-        }
-      );
+    if (
+      !Array.isArray(messages) ||
+      messages.length === 0
+    ) {
+      return res.status(400).json({
+        error: "Messages tidak valid."
+      });
     }
 
     const safeMessages = messages
       .slice(-30)
       .filter(
-        (m) =>
-          m &&
-          ["user", "assistant", "system"].includes(m.role) &&
-          typeof m.content === "string"
+        (message) =>
+          message &&
+          ["user", "assistant", "system"].includes(
+            message.role
+          ) &&
+          typeof message.content === "string"
       )
-      .map((m) => ({
-        role: m.role,
-        content: m.content.slice(0, 20000)
+      .map((message) => ({
+        role: message.role,
+        content: message.content.slice(0, 20000)
       }));
 
     const response = await fetch(
@@ -86,63 +68,34 @@ export default async function handler(req) {
     if (!response.ok) {
       console.error("OpenRouter:", data);
 
-      return new Response(
-        JSON.stringify({
-          error:
-            data?.error?.message ||
-            "OpenRouter gagal memproses request."
-        }),
-        {
-          status: response.status,
-          headers: {
-            "Content-Type": "application/json"
-          }
-        }
-      );
+      return res.status(response.status).json({
+        error:
+          data?.error?.message ||
+          "OpenRouter gagal memproses request."
+      });
     }
 
     const content =
       data?.choices?.[0]?.message?.content;
 
     if (!content) {
-      return new Response(
-        JSON.stringify({
-          error: "Model tidak memberikan respons."
-        }),
-        {
-          status: 502,
-          headers: {
-            "Content-Type": "application/json"
-          }
-        }
-      );
+      return res.status(502).json({
+        error:
+          "Model tidak memberikan respons."
+      });
     }
 
-    return new Response(
-      JSON.stringify({
-        content,
-        model: data?.model || MODEL
-      }),
-      {
-        status: 200,
-        headers: {
-          "Content-Type": "application/json"
-        }
-      }
-    );
-  } catch (error) {
-    console.error(error);
+    return res.status(200).json({
+      content,
+      model: data?.model || MODEL
+    });
 
-    return new Response(
-      JSON.stringify({
-        error: "Terjadi kesalahan pada server."
-      }),
-      {
-        status: 500,
-        headers: {
-          "Content-Type": "application/json"
-        }
-      }
-    );
+  } catch (error) {
+    console.error("Server error:", error);
+
+    return res.status(500).json({
+      error:
+        "Terjadi kesalahan pada server."
+    });
   }
 }
