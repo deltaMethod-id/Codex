@@ -1,6 +1,6 @@
 const MODEL =
   process.env.OPENROUTER_MODEL ||
-  "nvidia/nemotron-3-ultra:free";
+  "nvidia/nemotron-3-ultra-550b-a55b:free";
 
 module.exports = async (req, res) => {
   if (req.method !== "POST") {
