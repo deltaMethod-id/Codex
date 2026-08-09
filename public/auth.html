@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In — Codex</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #080808;
+      color: #fff;
+      font-family: Inter, Arial, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card {
+      width: min(420px, 92%);
+      padding: 35px;
+      background: #101010;
+      border: 1px solid #222;
+      border-radius: 18px;
+    }
+
+    h1 { margin-top: 0; }
+
+    p { color: #888; }
+
+    label {
+      display: block;
+      margin: 18px 0 8px;
+      color: #bbb;
+      font-size: 14px;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid #2b2b2b;
+      border-radius: 10px;
+      background: #090909;
+      color: #fff;
+      outline: none;
+    }
+
+    input:focus { border-color: #777; }
+
+    button {
+      width: 100%;
+      border: 0;
+      padding: 14px;
+      margin-top: 22px;
+      border-radius: 10px;
+      background: #fff;
+      color: #000;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    a { color: #aaa; }
+  </style>
+</head>
+
+<body>
+
+<div class="card">
+  <h1>Welcome to Codex</h1>
+  <p>Masukkan profil lokal untuk melanjutkan.</p>
+
+  <form id="form">
+    <label>Nama</label>
+    <input
+      id="name"
+      type="text"
+      placeholder="Nama kamu"
+      maxlength="40"
+      required
+    >
+
+    <label>Email</label>
+    <input
+      id="email"
+      type="email"
+      placeholder="name@example.com"
+      required
+    >
+
+    <button type="submit">Continue</button>
+  </form>
+
+  <p style="font-size:13px; margin-top:20px;">
+    Data profil disimpan di browser menggunakan LocalStorage.
+  </p>
+</div>
+
+<script>
+  const existing = JSON.parse(localStorage.getItem("codex_user") || "null");
+
+  if (existing) {
+    location.href = "/dashboard";
+  }
+
+  document.getElementById("form").addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const user = {
+      name: document.getElementById("name").value.trim(),
+      email: document.getElementById("email").value.trim()
+    };
+
+    localStorage.setItem("codex_user", JSON.stringify(user));
+    location.href = "/dashboard";
+  });
+</script>
+
+</body>
+</html>
