@@ -3,73 +3,455 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Dashboard — Codex</title>
 
   <style>
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
+    :root {
+      --bg: #080808;
+      --panel: #101010;
+      --panel-2: #141414;
+      --border: #242424;
+      --border-light: #303030;
+      --text: #fff;
+      --muted: #888;
+      --muted-2: #666;
+    }
+
+    html,
     body {
       margin: 0;
-      background: #080808;
-      color: #fff;
-      font-family: Inter, Arial, sans-serif;
+      min-height: 100%;
     }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+
+      font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Arial,
+        sans-serif;
+    }
+
+    a,
+    button {
+      font: inherit;
+    }
+
+    /* =========================
+       NAV
+       ========================= */
 
     nav {
       height: 65px;
-      border-bottom: 1px solid #222;
+
       display: flex;
       align-items: center;
       justify-content: space-between;
+
       padding: 0 30px;
+
+      background: rgba(8, 8, 8, .92);
+
+      border-bottom: 1px solid var(--border);
+
+      position: sticky;
+      top: 0;
+
+      z-index: 20;
+
+      backdrop-filter: blur(12px);
     }
 
-    nav a {
-      color: #aaa;
-      text-decoration: none;
-      margin-left: 20px;
+    .brand {
+      color: #fff;
+
+      font-size: 18px;
+      font-weight: 900;
+
+      letter-spacing: -.3px;
     }
+
+    nav .links {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    nav a,
+    .logout {
+      color: #999;
+
+      text-decoration: none;
+
+      padding: 8px 11px;
+
+      border-radius: 8px;
+
+      transition:
+        background .18s ease,
+        color .18s ease;
+    }
+
+    nav a:hover,
+    .logout:hover {
+      color: #fff;
+      background: #151515;
+    }
+
+    .logout {
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    /* =========================
+       MAIN
+       ========================= */
 
     main {
-      max-width: 950px;
+      width: min(1000px, 100%);
+
       margin: auto;
-      padding: 70px 25px;
+
+      padding:
+        65px 25px 80px;
+    }
+
+    .eyebrow {
+      color: #555;
+
+      font-size: 11px;
+      font-weight: 800;
+
+      letter-spacing: .1em;
+      text-transform: uppercase;
     }
 
     h1 {
-      font-size: 45px;
-      margin-bottom: 10px;
+      margin:
+        8px 0 10px;
+
+      font-size: clamp(38px, 6vw, 52px);
+
+      line-height: 1.05;
+
+      letter-spacing: -.045em;
     }
 
-    .sub { color: #888; }
+    .sub {
+      margin: 0;
+
+      color: var(--muted);
+
+      font-size: 15px;
+
+      line-height: 1.6;
+    }
+
+    /* =========================
+       QUICK ACTIONS
+       ========================= */
+
+    .section {
+      margin-top: 42px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      margin-bottom: 14px;
+    }
+
+    .section-title {
+      margin: 0;
+
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .new-chat {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+
+      padding: 9px 13px;
+
+      color: #000;
+
+      background: #fff;
+
+      border: 0;
+      border-radius: 9px;
+
+      text-decoration: none;
+
+      font-size: 13px;
+      font-weight: 700;
+
+      transition:
+        transform .18s ease,
+        opacity .18s ease;
+    }
+
+    .new-chat:hover {
+      transform: translateY(-1px);
+      opacity: .9;
+    }
 
     .cards {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 16px;
-      margin-top: 40px;
+
+      grid-template-columns:
+        repeat(
+          auto-fit,
+          minmax(220px, 1fr)
+        );
+
+      gap: 14px;
     }
 
     .card {
+      min-height: 145px;
+
       display: block;
-      min-height: 160px;
-      background: #101010;
-      border: 1px solid #242424;
-      border-radius: 16px;
-      padding: 25px;
+
+      padding: 22px;
+
+      color: #fff;
+
+      background: var(--panel);
+
+      border: 1px solid var(--border);
+      border-radius: 14px;
+
       text-decoration: none;
-      color: white;
-      transition: .2s;
+
+      transition:
+        transform .2s ease,
+        border-color .2s ease,
+        background .2s ease;
     }
 
     .card:hover {
       transform: translateY(-3px);
-      border-color: #555;
+
+      background: #121212;
+
+      border-color: #3a3a3a;
+    }
+
+    .card-icon {
+      font-size: 20px;
+
+      margin-bottom: 17px;
+    }
+
+    .card h3 {
+      margin: 0 0 7px;
+
+      font-size: 15px;
     }
 
     .card p {
-      color: #888;
-      line-height: 1.5;
+      margin: 0;
+
+      color: #777;
+
+      font-size: 13px;
+
+      line-height: 1.55;
+    }
+
+    /* =========================
+       CHAT LIST
+       ========================= */
+
+    .chat-section {
+      margin-top: 48px;
+    }
+
+    .chat-list {
+      display: flex;
+      flex-direction: column;
+
+      gap: 8px;
+    }
+
+    .chat-item {
+      width: 100%;
+
+      display: flex;
+      align-items: center;
+      gap: 14px;
+
+      padding: 15px 16px;
+
+      color: #fff;
+
+      background: #0f0f0f;
+
+      border: 1px solid var(--border);
+      border-radius: 12px;
+
+      text-decoration: none;
+
+      transition:
+        background .18s ease,
+        border-color .18s ease,
+        transform .18s ease;
+    }
+
+    .chat-item:hover {
+      background: #141414;
+
+      border-color: #353535;
+
+      transform: translateX(2px);
+    }
+
+    .chat-icon {
+      width: 38px;
+      height: 38px;
+
+      flex: 0 0 38px;
+
+      display: grid;
+      place-items: center;
+
+      color: #ccc;
+
+      background: #171717;
+
+      border: 1px solid #292929;
+      border-radius: 10px;
+    }
+
+    .chat-info {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .chat-title {
+      margin-bottom: 4px;
+
+      color: #eee;
+
+      font-size: 14px;
+      font-weight: 700;
+
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .chat-preview {
+      color: #666;
+
+      font-size: 12px;
+
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .chat-arrow {
+      color: #555;
+
+      font-size: 18px;
+    }
+
+    /* =========================
+       EMPTY CHAT
+       ========================= */
+
+    .empty-chat {
+      padding: 38px 20px;
+
+      text-align: center;
+
+      background: #0d0d0d;
+
+      border: 1px dashed #252525;
+      border-radius: 14px;
+    }
+
+    .empty-chat-icon {
+      width: 42px;
+      height: 42px;
+
+      display: grid;
+      place-items: center;
+
+      margin: 0 auto 12px;
+
+      color: #aaa;
+
+      background: #151515;
+
+      border: 1px solid #292929;
+      border-radius: 11px;
+    }
+
+    .empty-chat h3 {
+      margin: 0 0 6px;
+
+      font-size: 15px;
+    }
+
+    .empty-chat p {
+      margin: 0;
+
+      color: #666;
+
+      font-size: 13px;
+    }
+
+    /* =========================
+       RESPONSIVE
+       ========================= */
+
+    @media (max-width: 600px) {
+
+      nav {
+        padding: 0 15px;
+      }
+
+      nav .links {
+        gap: 2px;
+      }
+
+      nav a,
+      .logout {
+        padding:
+          7px 8px;
+
+        font-size: 13px;
+      }
+
+      main {
+        padding:
+          45px 15px 60px;
+      }
+
+      .section-header {
+        align-items: flex-start;
+        gap: 12px;
+      }
+
+      .new-chat {
+        white-space: nowrap;
+      }
     }
   </style>
 </head>
@@ -77,50 +459,399 @@
 <body>
 
 <nav>
-  <strong>Codex</strong>
 
-  <div>
-    <a href="/chat">Chat</a>
-    <a href="/settings">Settings</a>
-    <a href="#" onclick="logout()">Logout</a>
+  <div class="brand">
+    Codex
   </div>
+
+  <div class="links">
+
+    <a href="/chat">
+      Chat
+    </a>
+
+    <a href="/settings">
+      Settings
+    </a>
+
+    <button
+      class="logout"
+      type="button"
+      onclick="logout()"
+    >
+      Logout
+    </button>
+
+  </div>
+
 </nav>
 
+
 <main>
-  <div class="sub">DASHBOARD</div>
-  <h1 id="welcome">Welcome.</h1>
+
+  <div class="eyebrow">
+    Dashboard
+  </div>
+
+  <h1 id="welcome">
+    Welcome.
+  </h1>
 
   <p class="sub">
     What would you like to create today?
   </p>
 
-  <div class="cards">
-    <a class="card" href="/chat">
-      <h3>✦ New Chat</h3>
-      <p>Mulai percakapan baru dengan Nemotron.</p>
-    </a>
 
-    <a class="card" href="/settings">
-      <h3>⚙ Profile</h3>
-      <p>Ubah nama, profile picture, dan banner Codex kamu.</p>
-    </a>
-  </div>
+  <!-- QUICK ACTIONS -->
+
+  <section class="section">
+
+    <div class="section-header">
+
+      <h2 class="section-title">
+        Quick actions
+      </h2>
+
+      <a
+        class="new-chat"
+        href="/chat"
+        onclick="startNewChat(event)"
+      >
+        ＋ New chat
+      </a>
+
+    </div>
+
+
+    <div class="cards">
+
+      <a
+        class="card"
+        href="/chat"
+        onclick="startNewChat(event)"
+      >
+
+        <div class="card-icon">
+          ✦
+        </div>
+
+        <h3>
+          New Chat
+        </h3>
+
+        <p>
+          Mulai percakapan baru dengan Codex Intelligence.
+        </p>
+
+      </a>
+
+
+      <a
+        class="card"
+        href="/settings"
+      >
+
+        <div class="card-icon">
+          ⚙
+        </div>
+
+        <h3>
+          Profile
+        </h3>
+
+        <p>
+          Ubah nama, profile picture, dan pengaturan Codex kamu.
+        </p>
+
+      </a>
+
+    </div>
+
+  </section>
+
+
+  <!-- CHAT LIST -->
+
+  <section class="chat-section">
+
+    <div class="section-header">
+
+      <h2 class="section-title">
+        Recent chats
+      </h2>
+
+    </div>
+
+
+    <div
+      id="chatList"
+      class="chat-list"
+    ></div>
+
+  </section>
+
 </main>
 
+
 <script>
-  const user = JSON.parse(localStorage.getItem("codex_user") || "null");
+  /* =========================
+     AUTH
+     ========================= */
+
+  let user = null;
+
+  try {
+
+    user = JSON.parse(
+      localStorage.getItem(
+        "codex_user"
+      ) || "null"
+    );
+
+  } catch {
+
+    user = null;
+
+  }
+
 
   if (!user) {
-    location.href = "/auth.html";
-  } else {
-    document.getElementById("welcome").textContent =
-      `Welcome, ${user.name}.`;
+
+    location.replace("/auth");
+
   }
 
-  function logout() {
-    localStorage.removeItem("codex_user");
-    location.href = "/auth";
+
+  /* =========================
+     WELCOME
+     ========================= */
+
+  const welcome =
+    document.getElementById(
+      "welcome"
+    );
+
+
+  if (user) {
+
+    welcome.textContent =
+      `Welcome, ${user.name || "User"}.`;
+
   }
+
+
+  /* =========================
+     CHAT LIST
+     ========================= */
+
+  const chatList =
+    document.getElementById(
+      "chatList"
+    );
+
+
+  function escapeHTML(value) {
+
+    const div =
+      document.createElement(
+        "div"
+      );
+
+    div.textContent =
+      String(value ?? "");
+
+    return div.innerHTML;
+
+  }
+
+
+  function getMessages() {
+
+    try {
+
+      const stored =
+        JSON.parse(
+          localStorage.getItem(
+            "codex_messages"
+          ) || "[]"
+        );
+
+
+      if (
+        !Array.isArray(stored)
+      ) {
+
+        return [];
+
+      }
+
+
+      return stored;
+
+    } catch {
+
+      return [];
+
+    }
+
+  }
+
+
+  function renderChatList() {
+
+    const messages =
+      getMessages();
+
+
+    /*
+     * Belum ada percakapan
+     */
+
+    if (!messages.length) {
+
+      chatList.innerHTML = `
+        <div class="empty-chat">
+
+          <div class="empty-chat-icon">
+            ✦
+          </div>
+
+          <h3>
+            No chats yet
+          </h3>
+
+          <p>
+            Start a conversation with Codex.
+          </p>
+
+        </div>
+      `;
+
+      return;
+
+    }
+
+
+    /*
+     * Ambil pesan user pertama
+     * sebagai judul conversation.
+     */
+
+    const firstUserMessage =
+      messages.find(
+        message =>
+          message.role === "user"
+      );
+
+
+    const title =
+      firstUserMessage?.content ||
+      "New conversation";
+
+
+    /*
+     * Ambil pesan terakhir
+     * sebagai preview.
+     */
+
+    const lastMessage =
+      messages[
+        messages.length - 1
+      ];
+
+
+    const preview =
+      lastMessage?.content ||
+      "Conversation";
+
+
+    chatList.innerHTML = `
+      <a
+        class="chat-item"
+        href="/chat"
+      >
+
+        <div class="chat-icon">
+          ✦
+        </div>
+
+        <div class="chat-info">
+
+          <div class="chat-title">
+            ${escapeHTML(
+              title.length > 70
+                ? title.slice(0, 70) + "…"
+                : title
+            )}
+          </div>
+
+          <div class="chat-preview">
+            ${escapeHTML(
+              preview.length > 110
+                ? preview.slice(0, 110) + "…"
+                : preview
+            )}
+          </div>
+
+        </div>
+
+        <div class="chat-arrow">
+          ›
+        </div>
+
+      </a>
+    `;
+
+  }
+
+
+  /* =========================
+     NEW CHAT
+     ========================= */
+
+  function startNewChat(event) {
+
+    /*
+     * Jangan hapus chat ketika
+     * hanya membuka /chat dari
+     * normal navigation.
+     */
+
+    event.preventDefault();
+
+    localStorage.removeItem(
+      "codex_messages"
+    );
+
+    location.href = "/chat";
+
+  }
+
+
+  /* =========================
+     LOGOUT
+     ========================= */
+
+  function logout() {
+
+    localStorage.removeItem(
+      "codex_user"
+    );
+
+    localStorage.removeItem(
+      "codex_messages"
+    );
+
+    location.replace("/auth");
+
+  }
+
+
+  /* =========================
+     * START
+     * ========================= */
+
+  renderChatList();
 </script>
 
 </body>
