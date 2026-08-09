@@ -2,7 +2,7 @@ const MODEL =
   process.env.OPENROUTER_MODEL ||
   "nvidia/nemotron-3-ultra:free";
 
-export default async function handler(req, res) {
+module.exports = async (req, res) => {
   if (req.method !== "POST") {
     return res.status(405).json({
       error: "Method Not Allowed"
@@ -15,12 +15,13 @@ export default async function handler(req, res) {
   if (!API_KEY) {
     return res.status(500).json({
       error:
-        "OPENROUTER_API_KEY belum dikonfigurasi."
+        "OPENROUTER_API_KEY belum dikonfigurasi di Vercel."
     });
   }
 
   try {
-    const { messages } = req.body || {};
+    const body = req.body || {};
+    const messages = body.messages;
 
     if (
       !Array.isArray(messages) ||
@@ -46,15 +47,28 @@ export default async function handler(req, res) {
         content: message.content.slice(0, 20000)
       }));
 
+    if (safeMessages.length === 0) {
+      return res.status(400).json({
+        error: "Tidak ada message yang valid."
+      });
+    }
+
     const response = await fetch(
       "https://openrouter.ai/api/v1/chat/completions",
       {
         method: "POST",
+
         headers: {
-          Authorization: `Bearer ${API_KEY}`,
-          "Content-Type": "application/json",
-          "X-Title": "Codex"
+          Authorization:
+            `Bearer ${API_KEY}`,
+
+          "Content-Type":
+            "application/json",
+
+          "X-Title":
+            "Codex"
         },
+
         body: JSON.stringify({
           model: MODEL,
           messages: safeMessages,
@@ -63,12 +77,18 @@ export default async function handler(req, res) {
       }
     );
 
-    const data = await response.json();
+    const data =
+      await response.json();
 
     if (!response.ok) {
-      console.error("OpenRouter:", data);
+      console.error(
+        "OpenRouter error:",
+        data
+      );
 
-      return res.status(response.status).json({
+      return res.status(
+        response.status
+      ).json({
         error:
           data?.error?.message ||
           "OpenRouter gagal memproses request."
@@ -78,7 +98,10 @@ export default async function handler(req, res) {
     const content =
       data?.choices?.[0]?.message?.content;
 
-    if (!content) {
+    if (
+      typeof content !== "string" ||
+      !content.trim()
+    ) {
       return res.status(502).json({
         error:
           "Model tidak memberikan respons."
@@ -87,15 +110,20 @@ export default async function handler(req, res) {
 
     return res.status(200).json({
       content,
-      model: data?.model || MODEL
+      model:
+        data?.model || MODEL
     });
 
   } catch (error) {
-    console.error("Server error:", error);
+    console.error(
+      "Codex server error:",
+      error
+    );
 
     return res.status(500).json({
       error:
-        "Terjadi kesalahan pada server."
+        error?.message ||
+        "Internal Server Error"
     });
   }
-}
+};
